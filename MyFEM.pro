@@ -1,8 +1,10 @@
 CONFIG += c++11
 HEADERS += \
     area.h \
-    MyFEM.h
+    MyFEM.h \
+    simplex.h
 
 SOURCES += \
     area.cpp \
-    main.cpp
+    main.cpp \
+    simplex.cpp
