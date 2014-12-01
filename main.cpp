@@ -1,24 +1,28 @@
 #include <matrix.h>
+#include <numvector.h>
 #include <iostream>
 #include <chrono>
+#include <lesystem.h>
+#include <iomanip>
 
 int main(/*int argc, char * argv[]*/)
 {
     using namespace chrono;
-    Matrix<double> m(10);
-    m.fill(10.0);
-    m.randomize(0.0, 1.0);
+    unsigned N{1000};
+    Matrix<double> A(N, N);
+    Vector<double> B(N);
+    A.randomize(0.0, 10.0);
+    B.randomize(-1.0, 1.0);
 
-    double factor;
-    for (unsigned keyRow = 0; keyRow < m.size(); keyRow++)
-    {
-        for (unsigned row = keyRow+1; row < m.size(); row++) {
-            factor = (-1.0)*m(row, keyRow)/m(keyRow, keyRow);
-            m.addToRow(row, keyRow, factor);
-        }
-    }
+    LESystem<double> s(A,B);
+    auto t0 = high_resolution_clock::now();
+    s.solve();
+    auto t1 = high_resolution_clock::now();
+    std::cout << duration_cast<seconds>(t1-t0).count() << " s passed" << std::endl;
 
-    std::cout << m;
+    Vector<double> v = s.getSolution();
+    v = A*v - B;
+    std::cout << std::fixed << std::setprecision(12) <<  v.mag() << std::endl;
 
     return 0;
 }
