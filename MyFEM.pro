@@ -8,7 +8,9 @@ HEADERS += \
     simplex.h \
     matrix.h \
     lesystem.h \
-    numvector.h
+    numvector.h \
+    abstractfunctor.h \
+    myfunctor.h
 
 SOURCES += \
     area.cpp \
@@ -16,6 +18,8 @@ SOURCES += \
     simplex.cpp \
     matrix.cpp \
     lesystem.cpp \
-    numvector.cpp
+    numvector.cpp \
+    abstractfunctor.cpp \
+    myfunctor.cpp
 
 TARGET = FEM_lab

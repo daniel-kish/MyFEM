@@ -4,6 +4,7 @@
 #include <random>
 #include <iostream>
 #include <iomanip>
+#include <chrono>
 using namespace std;
 
 template <typename Data> class Vector;
@@ -60,6 +61,26 @@ public:
             r(i) = data[i] - v(i);
         return r;
     }
+    Vector<Data> operator*(Data v) {
+        Vector<Data> res(data.size());
+        for (unsigned i = 0; i < data.size(); i++)
+            res(i) = v*data[i];
+        return res;
+    }
+
+    Vector<Data> operator += (Vector<Data>& v)
+    {
+        for (unsigned i = 0; i < v.size(); i++)
+            data[i] += v(i);
+        return *this;
+    }
+
+    Vector<Data> operator += (Vector<Data>&& v)
+    {
+        for (unsigned i = 0; i < v.size(); i++)
+            data[i] += v(i);
+        return *this;
+    }
 
     void fill (Data filler)
     {
@@ -93,9 +114,21 @@ public:
 
 using vpos = Vector<double>::pos;
 
-
+const int outPrec{9};
 template <typename T>
 ostream& operator<< (ostream& out, Vector<T>& v)
+{
+    unsigned sz{v.size()};
+    out << std::fixed;
+    out << std::setprecision(outPrec);
+    for (unsigned j = 0; j < sz; j++)
+        out << std::setw(12) << v(j) << std::endl;
+    out << std::endl;
+    return out;
+}
+
+template <typename T>
+ostream& operator<< (ostream& out, Vector<T>&& v)
 {
     unsigned sz{v.size()};
     out << std::fixed;
@@ -104,6 +137,15 @@ ostream& operator<< (ostream& out, Vector<T>& v)
         out << std::setw(12) << v(j) << std::endl;
     out << std::endl;
     return out;
+}
+
+template <typename T>
+Vector<T> operator -(Vector<T> v)
+{
+    Vector<T> res(v.size());
+    for (unsigned i = 0; i < v.size(); i++)
+        res(i) = -v(i);
+    return res;
 }
 
 #endif // VECTOR_H

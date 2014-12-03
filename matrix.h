@@ -153,6 +153,23 @@ ostream& operator<< (ostream& out, Matrix<T>& m)
     return out;
 }
 
+template <typename T>
+ostream& operator<< (ostream& out, Matrix<T>&& m)
+{
+    unsigned cols{m.cols()};
+    unsigned rows{m.rows()};
+
+    out << std::fixed;
+    out << std::setprecision(6);
+    for (unsigned i = 0; i < rows; i++) {
+        for (unsigned j = 0; j < cols; j++)
+            out << std::setw(12) << m(i,j) <<' ';
+        out << std::endl;
+    }
+    return out;
+}
+
+
 using RealMat = Matrix<double>;
 using mpos = Matrix<double>::pos;
 

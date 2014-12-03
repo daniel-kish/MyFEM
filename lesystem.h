@@ -26,11 +26,27 @@ public:
             m(row, m.cols()-1) =  v(row);
         }
     }
-    void solve()
+    LESystem(Matrix<Data>&& _m, Vector<Data>&& v) : m(_m.rows(), _m.cols()+1), x(_m.cols())
+    {
+        if (_m.cols() != _m.rows() || _m.rows() != v.size()) {
+            std::cerr << "You do it wrong!: Matrix should be"
+                         " square and vector size equal to m.cols()\n";
+            exit(1);
+        }
+
+        for (unsigned row = 0; row < m.rows(); row++) {
+            for (unsigned col = 0; col < m.cols(); col++)
+                m(row,col) = _m(row,col);
+            m(row, m.cols()-1) =  v(row);
+        }
+    }
+    Vector<Data> solve()
     {
         gauss_fwd();
         gauss_bwd();
+        return x;
     }
+
     void gauss_fwd()
     {
         // iterating over rows we should make column under current diagonal entry all-zeros

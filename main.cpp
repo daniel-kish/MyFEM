@@ -1,28 +1,24 @@
-#include <matrix.h>
-#include <numvector.h>
 #include <iostream>
-#include <chrono>
+#include <myfunctor.h>
+#include <cmath>
 #include <lesystem.h>
-#include <iomanip>
+using namespace std;
 
 int main(/*int argc, char * argv[]*/)
-{
-    using namespace chrono;
-    unsigned N{1000};
-    Matrix<double> A(N, N);
-    Vector<double> B(N);
-    A.randomize(0.0, 10.0);
-    B.randomize(-1.0, 1.0);
+{    
+    MyFunctor f;
+    Vector<double> X0(3);
+    RealMat m(3,3);
+    X0(0) = 1.0;
+    X0(1) = 0.5;
+    X0(2) = 1.0;
 
-    LESystem<double> s(A,B);
-    auto t0 = high_resolution_clock::now();
-    s.solve();
-    auto t1 = high_resolution_clock::now();
-    std::cout << duration_cast<seconds>(t1-t0).count() << " s passed" << std::endl;
+    // TO-DO! Implement Jacoby matrix singularity test
+    int n{50};
+    while (n-- && f(X0).mag() > 10.0E-12)
+    std::cout << (X0 += LESystem<double>(f.JacobyMx(X0), -f(X0)).solve());
 
-    Vector<double> v = s.getSolution();
-    v = A*v - B;
-    std::cout << std::fixed << std::setprecision(12) <<  v.mag() << std::endl;
+
 
     return 0;
 }
