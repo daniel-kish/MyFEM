@@ -28,6 +28,7 @@ public:
                 exit(8);
             }
             X0 += s.solve();
+            std::cerr << std::setprecision(16) << std::fixed << f->val(X0).mag() << std::endl;
             if (f->val(X0).mag() < prec) {
                 std::clog << cnt << std::endl;
                 return X0;

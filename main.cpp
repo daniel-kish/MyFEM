@@ -116,16 +116,17 @@ int main(/*int argc, char * argv[]*/)
     AbstractFunctor<double>* f = new MyFunctor;
     RealVec X0(4);
     RealMat m(4,4);
-    X0(0) = -0.7+1.0;
-    X0(1) = 1.098;
-    X0(2) = 0.52;
-    X0(3) = -0.82;
+    X0(0) = 1.0;
+    X0(1) = -1.0;
+    X0(2) = 0.7;
+    X0(3) = 1.5;
 
-    RealNESystem s(f);
-    RealVec v = s.solve(X0);
+    std::cout << f->val(X0);
+//    RealNESystem s(f);
+//    RealVec v = s.solve(X0);
 
-    std::cout << v;
-    std::cout << std::endl << std::setprecision(16) << f->val(v).mag() << std::endl;
+//    std::cout << v;
+//    std::cout << std::endl << std::setprecision(16) << f->val(v).mag() << std::endl;
 
 
 
