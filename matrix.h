@@ -102,6 +102,17 @@ public:
         }
         return x;
     }
+    Vector<Data> operator*(Vector<Data>&& v)
+    {
+        Vector<Data> x(v.size());
+        for (int row = 0; row < rowsNo; row++) {
+            double a{0.0};
+            for (int col = 0; col < colsNo; col++)
+                a += data[row*colsNo+col]*v(col);
+            x(row) = a;
+        }
+        return x;
+    }
 
     vector<Data>& getDataRef() {
         return data;

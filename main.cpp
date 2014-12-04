@@ -113,22 +113,19 @@ MyClass f()
 
 int main(/*int argc, char * argv[]*/)
 {    
-    AbstractFunctor<double>* f = new MyFunctor;
-    RealVec X0(4);
-    RealMat m(4,4);
-    X0(0) = 1.0;
-    X0(1) = -1.0;
-    X0(2) = 0.7;
-    X0(3) = 1.5;
+    RealVec X0(2);
+    X0(0) = 0.0;
+    X0(1) = 1.0;
 
-    std::cout << f->val(X0);
-//    RealNESystem s(f);
-//    RealVec v = s.solve(X0);
+    RealVec v = X0;
 
-//    std::cout << v;
-//    std::cout << std::endl << std::setprecision(16) << f->val(v).mag() << std::endl;
-
-
+    int n{20};
+    while (n--) {
+        RealNESystem s(new MyFunctor(v(0), v(1)), 10.0E-16);
+        v = s.solve(v);
+        std::cout << setprecision(6);
+        std::cout << v(0) << std::endl;
+    }
 
     return 0;
 }

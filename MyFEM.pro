@@ -24,4 +24,4 @@ SOURCES += \
     myfunctor.cpp \
     nesystem.cpp
 
-TARGET = FEM_lab
+#TARGET = FEM_lab

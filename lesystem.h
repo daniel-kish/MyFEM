@@ -3,6 +3,7 @@
 #include <matrix.h>
 #include <numvector.h>
 #include <exception>
+#include <utility>
 
 template <typename Data> class LESystem;
 template <typename T> ostream& operator<< (ostream& out, LESystem<T>& m);
@@ -66,6 +67,20 @@ public:
             }
         return false;
     }
+    void swapRows(unsigned i, unsigned j)
+    {
+        for (unsigned col = 0; col < m.cols(); col++)
+        {
+            std::swap(m(i,col), m(j,col));
+        }
+    }
+    unsigned findSafeRow(unsigned origin)
+    {
+        for (unsigned i = origin+1; i < m.rows(); i++)
+            if (fabs(m(i,i)) > 10.0E-16)
+                return i;
+        return -1;
+    }
 
     Vector<Data> solve()
     {
@@ -80,11 +95,32 @@ public:
         double factor;
         for (unsigned keyRow = 0; keyRow < m.rows(); keyRow++)
         {
+            if (fabs(m(keyRow,keyRow)) < 10.0E-16)
+            {
+                unsigned safeRow = findSafeRow(keyRow);
+                assert(safeRow > 0);
+                swapRows(keyRow, safeRow);
+            }
             for (unsigned row = keyRow+1; row < m.rows(); row++) {
-                factor = (-1.0)*m(row, keyRow)/m(keyRow, keyRow);
-                m.addToRow(row, keyRow, factor);
+                if (fabs(m(row,keyRow)) > 10.0E-16) {
+                    factor = (-1.0)*m(row, keyRow)/m(keyRow, keyRow);
+                    m.addToRow(row, keyRow, factor);
+                }
             }
         }
+
+//        for (unsigned keyRow = 0; keyRow <= m.rows(); keyRow++)
+//        {
+//            for (unsigned row = keyRow+1; row < m.rows(); row++)
+//            {
+//                if (fabs(m(row,keyRow)) > 10.0E-16) {
+//                    factor = (-1.0)*m(row, keyRow)/m(keyRow, keyRow);
+//                    for (unsigned col = 0; col < m.cols(); col++)
+//                        if ( fabs(m(keyRow,col)) > 10.0E-16)
+//                            m(row,col) += m(keyRow,col) * factor;
+//                }
+//            }
+//        }
     }
 
     void gauss_bwd()

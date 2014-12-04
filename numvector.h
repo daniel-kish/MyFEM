@@ -104,7 +104,7 @@ public:
     Data mag()
     {
         double m{0.0};
-        for (auto& elem : data)
+        for (auto elem : data)
             m += elem*elem;
         return sqrt(m);
     }
