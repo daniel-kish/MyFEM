@@ -11,6 +11,7 @@ protected:
 public:
     AbstractFunctor(unsigned d) : dim{d} {}
     virtual Vector<Data> operator () (Vector<Data>& X) = 0;
+    virtual Vector<Data> val(Vector<Data>& X) = 0;
     virtual Matrix<Data> JacobyMx(Vector<Data>& X) = 0;
     unsigned dimension() const {
         return dim;

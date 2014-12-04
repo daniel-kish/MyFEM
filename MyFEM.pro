@@ -10,7 +10,8 @@ HEADERS += \
     lesystem.h \
     numvector.h \
     abstractfunctor.h \
-    myfunctor.h
+    myfunctor.h \
+    nesystem.h
 
 SOURCES += \
     area.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     lesystem.cpp \
     numvector.cpp \
     abstractfunctor.cpp \
-    myfunctor.cpp
+    myfunctor.cpp \
+    nesystem.cpp
 
 TARGET = FEM_lab

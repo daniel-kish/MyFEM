@@ -148,4 +148,6 @@ Vector<T> operator -(Vector<T> v)
     return res;
 }
 
+using RealVec = Vector<double>;
+
 #endif // VECTOR_H

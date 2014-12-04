@@ -2,6 +2,7 @@
 #define SLAE_H
 #include <matrix.h>
 #include <numvector.h>
+#include <exception>
 
 template <typename Data> class LESystem;
 template <typename T> ostream& operator<< (ostream& out, LESystem<T>& m);
@@ -26,7 +27,7 @@ public:
             m(row, m.cols()-1) =  v(row);
         }
     }
-    LESystem(Matrix<Data>&& _m, Vector<Data>&& v) : m(_m.rows(), _m.cols()+1), x(_m.cols())
+    LESystem(Matrix<Data> _m, Vector<Data> v) : m(_m.rows(), _m.cols()+1), x(_m.cols())
     {
         if (_m.cols() != _m.rows() || _m.rows() != v.size()) {
             std::cerr << "You do it wrong!: Matrix should be"
@@ -40,6 +41,32 @@ public:
             m(row, m.cols()-1) =  v(row);
         }
     }
+
+    void insertCopyMatrix(const Matrix<Data>& new_m)
+    {
+        assert(new_m.cols() == m.cols()-1 && new_m.rows() == m.rows());
+        for (unsigned i = 0; i < new_m.rows(); i++)
+            for (unsigned j = 0; j < new_m.cols(); j++)
+                m(i,j) = new_m(i,j);
+    }
+
+    void insertCopyRight(const Vector<Data>& new_v)
+    {
+        assert(new_v.size() == m.rows());
+        for (unsigned i = 0; i < new_v.size(); i++)
+            m(i, mpos::last) = new_v(i);
+    }
+
+    bool isSingular()
+    {
+        for (unsigned row = 0; row < m.rows(); row++)
+            if (fabs(m(row, row)) < 10.0E-10) {
+                std::cerr << "!:" << row << std::endl;
+                return true;
+            }
+        return false;
+    }
+
     Vector<Data> solve()
     {
         gauss_fwd();
