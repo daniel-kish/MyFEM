@@ -4,6 +4,9 @@
 #include <lesystem.h>
 #include <iomanip>
 #include <nesystem.h>
+#include <qapplication.h>
+#include <QwtPlot>
+#include <qwt_plot_curve.h>
 using namespace std;
 
 class MyClass {
@@ -111,21 +114,29 @@ MyClass f()
 }
 
 
-int main(/*int argc, char * argv[]*/)
+int main(int argc, char * argv[])
 {    
+    QApplication a(argc, argv);
     RealVec X0(2);
-    X0(0) = 0.0;
-    X0(1) = 1.0;
+    X0(0) = 1.0;
+    X0(1) = 0.0;
 
     RealVec v = X0;
+    QVector<QPointF> samples;
 
-    int n{20};
-    while (n--) {
+    for (int n = 0; n < 2*600*5; n++) {
         RealNESystem s(new MyFunctor(v(0), v(1)), 10.0E-16);
         v = s.solve(v);
-        std::cout << setprecision(6);
-        std::cout << v(0) << std::endl;
+        samples << QPointF(n*0.01, v(0));
     }
+    std::clog << samples.size() << std::endl;
 
-    return 0;
+    QwtPlot plot;
+    plot.setCanvasBackground(Qt::white);
+    QwtPlotCurve* c = new QwtPlotCurve;
+    c->setSamples(samples);
+    c->attach(&plot);
+    plot.show();
+
+    return a.exec();
 }
