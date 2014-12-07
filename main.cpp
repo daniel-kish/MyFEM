@@ -7,6 +7,8 @@
 #include <qapplication.h>
 #include <QwtPlot>
 #include <qwt_plot_curve.h>
+#include <qdebug.h>
+#include <qwt_plot_grid.h>
 using namespace std;
 
 class MyClass {
@@ -118,20 +120,30 @@ int main(int argc, char * argv[])
 {    
     QApplication a(argc, argv);
     RealVec X0(2);
-    X0(0) = 1.0;
-    X0(1) = 0.0;
+    X0(0) = 0.0;
+    X0(0) = 0.0;
 
-    RealVec v = X0;
     QVector<QPointF> samples;
 
-    for (int n = 0; n < 2*600*5; n++) {
-        RealNESystem s(new MyFunctor(v(0), v(1)), 10.0E-16);
-        v = s.solve(v);
-        samples << QPointF(n*0.01, v(0));
+    double T{20};
+    double Dt{0.001};
+    double I0 = 0.0;
+    double U0 = 0.0;
+    double Uc0 = 0.0;
+
+    for (int n = 0; n < T/Dt; n++) {
+        RealNESystem s(new MyFunctor(I0, U0, Uc0, n*Dt, Dt));
+        X0 = s.solve(X0);
+        I0 += Dt * X0(0);
+        U0 = X0(0);
+        Uc0 = X0(1);
+        samples << QPointF(Dt*n, X0(1));
     }
-    std::clog << samples.size() << std::endl;
+    qDebug() << samples.last();
 
     QwtPlot plot;
+    QwtPlotGrid *g = new QwtPlotGrid;
+    g->attach(&plot);
     plot.setCanvasBackground(Qt::white);
     QwtPlotCurve* c = new QwtPlotCurve;
     c->setSamples(samples);

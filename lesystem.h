@@ -84,6 +84,11 @@ public:
 
     Vector<Data> solve()
     {
+        if (m.rows() == 1)
+        {
+            x.fill(m(0,1)/m(0,0));
+            return x;
+        }
         gauss_fwd();
         gauss_bwd();
         return x;
